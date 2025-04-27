@@ -12,7 +12,7 @@ def geocode_address(address):
         return {"lat": location.latitude, "lon": location.longitude}
     return None
 
-def get_nearby_places(lat, lon, radius=100):
+def get_nearby_places(lat, lon, radius=200):
     """Query Overpass API for nearby buildings using lat/lon"""
     query = f"""
     [out:json];

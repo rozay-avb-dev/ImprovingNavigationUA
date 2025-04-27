@@ -6,3 +6,4 @@ python-dotenv
 geopy 
 overpy
 streamlit
+playwright
