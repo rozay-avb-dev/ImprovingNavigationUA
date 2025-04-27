@@ -36,5 +36,16 @@ def query_vision_llm(image_path, user_prompt):
     }
 
     response = requests.post(url, headers=headers, json=payload)
-    result = response.json()
-    return result["choices"][0]["message"]["content"]
+
+    if response.status_code != 200:
+        print("[ERROR] LLM API returned:", response.status_code)
+        print("[DEBUG] Response text:", response.text)
+        return "Sorry, I couldn't generate a description due to an API issue."
+
+    try:
+        result = response.json()
+        return result["choices"][0]["message"]["content"]
+    except Exception as e:
+        print("[ERROR] Failed to parse LLM JSON:", e)
+        print("[DEBUG] Response content:", response.content)
+        return "Sorry, the LLM response couldn't be processed."

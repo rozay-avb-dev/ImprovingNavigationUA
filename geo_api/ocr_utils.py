@@ -4,7 +4,7 @@ from PIL import Image
 import os
 import re
 
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"  # adjust if needed
+pytesseract.pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"  # adjust if needed
 
 def preprocess_image_for_ocr(image_path):
     image = cv2.imread(image_path)
@@ -31,3 +31,19 @@ def extract_address_from_text(text: str) -> str:
     if match:
         return match.group(0).strip()
     return None
+
+def extract_building_info(text: str):
+    lines = text.splitlines()
+    name_candidate = ""
+    number_candidate = ""
+
+    for i, line in enumerate(lines):
+        if "building number" in line.lower():
+            match = re.search(r"\d{1,4}", line)
+            if match:
+                number_candidate = match.group()
+        if re.search(r"\d{3,5}\s+E University Blvd", line):
+            if i > 0 and len(lines[i - 1].strip()) > 3:
+                name_candidate = lines[i - 1].strip()
+
+    return name_candidate.strip(), number_candidate.strip()
